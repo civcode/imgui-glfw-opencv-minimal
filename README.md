@@ -1,11 +1,12 @@
-imgui cmake example with opengl backend
+imgui opencv example
 =======================================
 
 Dependencies
 ------------
 
-Portable library for OpenGL - libglfw3-dev
+- GLFW - portable framework for OpenGL
 ```
 $ sudo apt-get install libglfw3-dev
 ```
+- Opencv 4.x
 
