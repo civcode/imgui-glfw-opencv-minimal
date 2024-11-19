@@ -142,7 +142,7 @@ int main(int, char**)
             glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.cols, image.rows, 0, GL_BGR, GL_UNSIGNED_BYTE, image.data);
 
-            // ImGui::Image(reinterpret_cast<void*>(static_cast<intptr_t>(texture)), ImVec2(image.cols, image.rows));
+            ImGui::Image(texture, ImVec2(image.cols, image.rows));
         }    
 
             ImGui::End();
