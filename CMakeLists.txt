@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 2.8)
 
 project(imgui-01)
 
+# Set CMake policy CMP0072 to NEW to prefer GLVND libraries over legacy 
+cmake_policy(SET CMP0072 NEW)
+
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED CONFIG)
 find_package(OpenCV REQUIRED)
