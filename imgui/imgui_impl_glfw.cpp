@@ -114,7 +114,7 @@ void ImGui_ImplGlfw_KeyCallback(GLFWwindow* window, int key, int scancode, int a
 
     ImGuiIO& io = ImGui::GetIO();
     if (action == GLFW_PRESS)
-        io.Ke KeysDown[key] = true;
+        io.KeysDown[key] = true;
     if (action == GLFW_RELEASE)
         io.KeysDown[key] = false;
 
