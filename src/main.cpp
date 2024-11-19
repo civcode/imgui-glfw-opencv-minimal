@@ -59,8 +59,8 @@ int main(int, char**)
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
     // Setup Dear ImGui style
-    //ImGui::StyleColorsDark();
-    //ImGui::StyleColorsClassic();
+    // ImGui::StyleColorsDark();
+    // ImGui::StyleColorsClassic();
     ImGui::StyleColorsLight();
 
     // Setup Platform/Renderer bindings
@@ -75,7 +75,7 @@ int main(int, char**)
     // - Read 'docs/FONTS.txt' for more instructions and details.
     // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
     //io.Fonts->AddFontDefault();
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
+    io.Fonts->AddFontFromFileTTF("../misc/fonts/Roboto-Medium.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
@@ -120,8 +120,16 @@ int main(int, char**)
             ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+            if (ImGui::Button("Button")) {                           // Buttons return true when clicked (most widgets return true when edited/activated)
                 counter++;
+                switch (counter % 3) {
+                    case 0: ImGui::StyleColorsClassic(); break;
+                    case 1: ImGui::StyleColorsLight(); break;
+                    case 2: ImGui::StyleColorsDark(); break;
+                }
+
+
+            }
             ImGui::SameLine();
             ImGui::Text("counter = %d", counter);
 
