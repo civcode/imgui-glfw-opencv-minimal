@@ -34,7 +34,7 @@ static void glfw_error_callback(int error, const char* description)
 
 int main(int, char**)
 {
-    //cv::Mat image = cv::imread("../test.png", cv::IMREAD_COLOR);
+    /* Load OpenCV image */
     cv::Mat image = cv::imread("../data/lena.jpg", cv::IMREAD_COLOR);
     if (image.empty()) {
         printf("Image could not be loaded.\n");
@@ -43,6 +43,15 @@ int main(int, char**)
     // cv::namedWindow("OpenCV");
     // cv::imshow("OpenCV", image);
     // cv::waitKey(0);
+    /* Create texture from OpenCV image */
+
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.cols, image.rows, 0, GL_BGR, GL_UNSIGNED_BYTE, image.data);
 
 
     // Setup window
@@ -91,16 +100,6 @@ int main(int, char**)
     bool show_demo_window = true;
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
-    /* Create texture */
-    GLuint texture;
-
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.cols, image.rows, 0, GL_BGR, GL_UNSIGNED_BYTE, image.data);
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -176,9 +175,26 @@ int main(int, char**)
         if (true) {
             ImGui::Begin("plot");
 
-            if (ImPlot::BeginPlot("My Plot")) {
-                ImPlot::PlotImage("Image", texture, ImPlotPoint(0, 0), ImPlotPoint(100, 100));
+            static float x_data[2] = {0, 1};
+            static float y_data[2] = {0, 1};
 
+            // x_data[0] += 0.001;
+            // x_data[1] += 0.001;
+            // if (x_data[1] > 0) {
+            //     x_data[1] = -1;
+            // } else {
+            //     x_data[1] = 1;
+            // }
+
+            ImPlotFlags plot_flags = ImPlotFlags_NoTitle | ImPlotFlags_NoLegend;
+            if (ImPlot::BeginPlot("My Plot", ImVec2(-1, 0), plot_flags)) {
+                // ImPlot::PlotImage("Image", texture, ImPlotPoint(0, 0), ImPlotPoint(100, 100));
+                ImPlot::SetNextMarkerStyle(ImPlotMarker_Circle, 2.0f);
+                // ImPlot::SetNextLineStyle(ImVec4(1, 0, 0, 1), 2.0f);
+                // ImPlotLineFlags flags = ImPlotLeImPlot::SetNextMarkerStyle(ImPlotMarker_Circle);
+                // ImPlotLegendFlags flags = ImPlotLegendFlags_None;
+                ImPlot::PlotLine("Line", x_data, y_data, 2);
+                ImPlot::PlotScatter("Scatter", x_data, y_data, 2);
                 ImPlot::EndPlot();
             }
             ImGui::End();
