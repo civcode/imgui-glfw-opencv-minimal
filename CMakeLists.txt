@@ -15,10 +15,13 @@ find_package(OpenCV REQUIRED)
 file(GLOB imgui-01_SRC
     ${PROJECT_SOURCE_DIR}/imgui/*.h
     ${PROJECT_SOURCE_DIR}/imgui/*.cpp
+    ${PROJECT_SOURCE_DIR}/implot/*.h
+    ${PROJECT_SOURCE_DIR}/implot/*.cpp
 )
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/imgui
+    ${PROJECT_SOURCE_DIR}/implot
     ${OpenCV_INCLUDE_DIRS}
 )
 

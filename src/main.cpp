@@ -10,6 +10,10 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl2.h"
+
+#include "implot.h"
+
+
 #include <stdio.h>
 #ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
@@ -54,6 +58,7 @@ int main(int, char**)
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImPlot::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -86,6 +91,16 @@ int main(int, char**)
     bool show_demo_window = true;
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+    /* Create texture */
+    GLuint texture;
+
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.cols, image.rows, 0, GL_BGR, GL_UNSIGNED_BYTE, image.data);
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -137,23 +152,14 @@ int main(int, char**)
             ImGui::End();
         }
 
-        {
+        if (true) {
             //OpenCV Image
             ImGui::Begin("OpenCV Image");                          // Create a window called "Hello, world!" and append into it.
-            GLuint texture;
-
-            //glEnable(GL_TEXTURE_2D);
-            glGenTextures(1, &texture);
-            glBindTexture(GL_TEXTURE_2D, texture);
-            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.cols, image.rows, 0, GL_BGR, GL_UNSIGNED_BYTE, image.data);
 
             ImGui::Image(texture, ImVec2(image.cols, image.rows));
+            ImGui::End();
         }    
 
-            ImGui::End();
         // 3. Show another simple window.
         if (show_another_window)
         {
@@ -163,6 +169,21 @@ int main(int, char**)
                 show_another_window = false;
             ImGui::End();
         }
+
+        /* ImPlot Demo */
+        ImPlot::ShowDemoWindow();
+
+        if (true) {
+            ImGui::Begin("plot");
+
+            if (ImPlot::BeginPlot("My Plot")) {
+                ImPlot::PlotImage("Image", texture, ImPlotPoint(0, 0), ImPlotPoint(100, 100));
+
+                ImPlot::EndPlot();
+            }
+            ImGui::End();
+        }
+
 
         // Rendering
         ImGui::Render();
@@ -188,6 +209,11 @@ int main(int, char**)
     ImGui_ImplOpenGL2_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+    ImPlot::DestroyContext();
+
+
+    /* Delete texture */
+    glDeleteTextures(1, &texture);
 
     glfwDestroyWindow(window);
     glfwTerminate();
